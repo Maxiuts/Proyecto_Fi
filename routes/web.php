@@ -1,5 +1,14 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
+# Rutas para autenticación social con Google y GitHub
+Route::get('auth/{provider}/redirect', [SocialiteController::class, 'redirect'])
+    ->name('socialite.redirect');
+
+# Route para manejar el callback de autenticación social
+Route::get('auth/{provider}/callback', [SocialiteController::class, 'callback'])
+    ->name('socialite.callback');
+
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
