@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesion — Impresion 3D</title>
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 </head>
 <body class="bg-black text-white min-h-screen flex items-center justify-center">
