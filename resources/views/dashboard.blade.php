@@ -7,13 +7,22 @@
 
     <div class="min-h-screen bg-gray-100 py-12 dark:bg-gray-900">
         <div class="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
-            <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-                <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-                    Gestión de productos
-                </h1>
-                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                    Registra, edita y elimina productos desde tu panel.
-                </p>
+            <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                        Gestión de productos
+                    </h1>
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                        Registra, edita y elimina productos desde tu panel.
+                    </p>
+                </div>
+                <a href="{{ route('shop') }}"
+                   class="shrink-0 inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Ir a la tienda
+                </a>
             </div>
 
             @if (session('status'))
