@@ -35,8 +35,12 @@ class SocialiteController extends Controller
             ]
         );
 
+        $user->update([
+            'role' => $user->email === config('app.admin_email') ? 'admin' : 'user',
+        ]);
+
         Auth::login($user, remember: true);
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('shop'));
     }
 }

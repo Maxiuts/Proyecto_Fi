@@ -65,3 +65,26 @@ test('users can logout', function () {
     $this->assertGuest();
     $response->assertRedirect('/');
 });
+
+test('admin email gets admin role on oauth callback', function () {
+    config(['app.admin_email' => 'admin@test.com']);
+
+    $user = User::factory()->create([
+        'email' => 'admin@test.com',
+        'role' => 'user',
+        'email_verified_at' => now(),
+    ]);
+
+    $socialUser = Mockery::mock(\Laravel\Socialite\Contracts\User::class);
+    $socialUser->shouldReceive('getEmail')->andReturn('admin@test.com');
+    $socialUser->shouldReceive('getName')->andReturn('Admin');
+    $socialUser->shouldReceive('getId')->andReturn('123');
+    $socialUser->shouldReceive('getAvatar')->andReturn(null);
+
+    \Laravel\Socialite\Facades\Socialite::shouldReceive('driver->user')
+        ->andReturn($socialUser);
+
+    $this->get('/auth/google/callback');
+
+    expect($user->fresh()->role)->toBe('admin');
+});
