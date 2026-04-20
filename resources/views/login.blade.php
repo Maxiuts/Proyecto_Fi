@@ -73,7 +73,7 @@
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-300 mb-1">
-                    Contrasena
+                    Contraseña
                 </label>
                 <input id="password" type="password" name="password"
                        required autocomplete="current-password"
@@ -94,7 +94,7 @@
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}"
                        class="text-sm text-indigo-400 hover:text-indigo-300">
-                        Olvide mi contrasena
+                        Olvide mi contraseña
                     </a>
                 @endif
             </div>

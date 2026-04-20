@@ -15,6 +15,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    public function shop(): View
+    {
+        $products = Product::query()
+            ->with('primaryImage')
+            ->latest()
+            ->get();
+
+        return view('shop', ['products' => $products]);
+    }
+
     /**
      * Display a listing of the resource.
      */

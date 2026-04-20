@@ -18,6 +18,10 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
+});
+
+Route::middleware(['auth', 'verified', \App\Http\Middleware\EnsureAdmin::class])->group(function () {
     Route::get('/dashboard', [ProductController::class, 'index'])->name('dashboard');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');

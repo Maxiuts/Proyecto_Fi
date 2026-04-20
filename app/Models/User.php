@@ -18,7 +18,13 @@ class User extends Authenticatable
         'provider',
         'provider_id',
         'avatar',
+        'role',
     ];
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 
     protected $hidden = [
         'password',
