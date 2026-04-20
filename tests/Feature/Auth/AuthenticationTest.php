@@ -17,7 +17,33 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('shop', absolute: false));
+});
+
+test('admin email gets admin role on login', function () {
+    config(['app.admin_email' => 'admin@test.com']);
+
+    $user = User::factory()->create(['email' => 'admin@test.com', 'role' => 'user']);
+
+    $this->post('/login', [
+        'email' => 'admin@test.com',
+        'password' => 'password',
+    ]);
+
+    expect($user->fresh()->role)->toBe('admin');
+});
+
+test('non-admin email gets user role on login', function () {
+    config(['app.admin_email' => 'admin@test.com']);
+
+    $user = User::factory()->create(['email' => 'otro@test.com', 'role' => 'admin']);
+
+    $this->post('/login', [
+        'email' => 'otro@test.com',
+        'password' => 'password',
+    ]);
+
+    expect($user->fresh()->role)->toBe('user');
 });
 
 test('users can not authenticate with invalid password', function () {
