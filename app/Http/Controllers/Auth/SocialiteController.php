@@ -32,15 +32,12 @@ class SocialiteController extends Controller
                 'avatar'            => $socialUser->getAvatar(),
                 'email_verified_at' => now(),
                 'password'          => null,
+                'role'              => $socialUser->getEmail() === config('app.admin_email') ? 'admin' : 'user',
             ]
         );
 
-        $user->update([
-            'role' => $user->email === config('app.admin_email') ? 'admin' : 'user',
-        ]);
-
         Auth::login($user, remember: true);
 
-        return redirect()->intended(route('shop'));
+        return redirect()->intended(route('shop', absolute: false));
     }
 }

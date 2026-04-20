@@ -88,3 +88,21 @@ test('admin email gets admin role on oauth callback', function () {
 
     expect($user->fresh()->role)->toBe('admin');
 });
+
+test('non-admin email gets user role on oauth callback', function () {
+    config(['app.admin_email' => 'admin@test.com']);
+
+    $socialUser = Mockery::mock(\Laravel\Socialite\Contracts\User::class);
+    $socialUser->shouldReceive('getEmail')->andReturn('otro@test.com');
+    $socialUser->shouldReceive('getName')->andReturn('Otro');
+    $socialUser->shouldReceive('getId')->andReturn('456');
+    $socialUser->shouldReceive('getAvatar')->andReturn(null);
+
+    \Laravel\Socialite\Facades\Socialite::shouldReceive('driver->user')
+        ->andReturn($socialUser);
+
+    $this->get('/auth/google/callback');
+
+    $user = \App\Models\User::where('email', 'otro@test.com')->first();
+    expect($user->role)->toBe('user');
+});
