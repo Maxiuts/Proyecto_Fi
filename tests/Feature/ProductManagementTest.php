@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 it('stores a product with an image from the dashboard', function () {
     Storage::fake('public');
 
-    $user = User::factory()->create();
+    $user = User::factory()->create(['role' => 'admin']);
 
     $response = $this
         ->actingAs($user)
