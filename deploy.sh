@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh maxim@100.88.140.50 "wsl -d Ubuntu -e bash -c 'cd /mnt/c/Users/maxim/proyectos/Proyecto_Fi && git pull && docker compose restart app && docker compose exec -T app php artisan migrate --force'"
