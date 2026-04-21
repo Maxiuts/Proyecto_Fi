@@ -149,9 +149,12 @@ class ProductController extends Controller
             $existingImage->delete();
         }
 
-        $path = Storage::disk('public')->putFile('products', $image);
+        $filename = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
+        $path = 'products/' . $filename;
 
-        if ($path === false) {
+        Storage::disk('public')->put($path, file_get_contents($image->getRealPath()));
+
+        if (! Storage::disk('public')->exists($path)) {
             throw new \RuntimeException('No se pudo guardar la imagen. Verifica los permisos del directorio de storage.');
         }
 
