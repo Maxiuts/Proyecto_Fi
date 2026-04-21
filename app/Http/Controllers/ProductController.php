@@ -149,7 +149,11 @@ class ProductController extends Controller
             $existingImage->delete();
         }
 
-        $path = $image->store('products', 'public');
+        $path = Storage::disk('public')->putFile('products', $image);
+
+        if ($path === false) {
+            throw new \RuntimeException('No se pudo guardar la imagen. Verifica los permisos del directorio de storage.');
+        }
 
         $product->images()->create([
             'path' => $path,
