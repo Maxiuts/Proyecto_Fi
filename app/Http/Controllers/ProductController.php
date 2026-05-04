@@ -13,6 +13,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use Inertia\Inertia;
+
 class ProductController extends Controller
 {
     public function shop(): View
@@ -20,9 +22,9 @@ class ProductController extends Controller
         $products = Product::query()
             ->with('primaryImage')
             ->latest()
-            ->get();
+            ->paginate(12);
 
-        return view('shop', ['products' => $products]);
+        return View('shop', ['products' => $products]);
     }
 
     /**

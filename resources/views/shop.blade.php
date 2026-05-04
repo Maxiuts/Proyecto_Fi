@@ -37,7 +37,7 @@
         {{-- Header --}}
         <div class="mb-10">
             <h1 class="text-3xl font-bold mb-1">Productos</h1>
-            <p class="text-gray-400 text-sm">{{ $products->count() }} producto{{ $products->count() !== 1 ? 's' : '' }} disponible{{ $products->count() !== 1 ? 's' : '' }}</p>
+            <p class="text-gray-400 text-sm">{{ $products->total() }} producto{{ $products->total() !== 1 ? 's' : '' }} disponible{{ $products->total() !== 1 ? 's' : '' }}</p>
         </div>
 
         @if ($products->isEmpty())
