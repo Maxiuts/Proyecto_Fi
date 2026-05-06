@@ -38,4 +38,8 @@ class User extends Authenticatable
             'password'          => 'hashed',
         ];
     }
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);//aqui estoy diciendo que usurario solo tiene un carrito 
+    }
 }

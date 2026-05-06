@@ -4,6 +4,15 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
+
+Route::middleware(['auth', 'verified'])->group(function () {//ruta para el carro
+    Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
+    Route::get('/cart',[CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart',[CartController::class, 'store'])->name('cart.store');
+    Route::patch('/cart/{item}',[CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{item}',[CartController::class, 'destroy'])->name('cart.destroy');
+});
 
 // Rutas para autenticación social con Google y GitHub
 Route::get('auth/{provider}/redirect', [SocialiteController::class, 'redirect'])
