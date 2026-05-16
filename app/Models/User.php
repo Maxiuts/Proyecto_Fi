@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -35,11 +34,17 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
+
     public function cart()
     {
-        return $this->hasOne(Cart::class);//aqui estoy diciendo que usurario solo tiene un carrito 
+        return $this->hasOne(Cart::class); // aqui estoy diciendo que usurario solo tiene un carrito
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

@@ -10,6 +10,7 @@
         "laravel-best-practices",
         "socialite-development",
         "pest-testing",
+        "inertia-react-development",
         "tailwindcss-development"
     ]
 }

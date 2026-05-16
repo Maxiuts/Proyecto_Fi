@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import AppLayout from './Layouts/AppLayout';
+import AppLayout from '../Layouts/AppLayout';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 
@@ -20,7 +20,7 @@ export default function Shop({ products }) {
                 });
                 setAddingProductId(null);
             },
-            onError: () => {
+            onError: (errors) => {
                 toast.error('Error al agregar al carrito', {
                     duration: 3000,
                 });
@@ -31,9 +31,11 @@ export default function Shop({ products }) {
 
     return (
         <AppLayout>
-            <div className="mb-8">
+            <div className="mb-10">
                 <h1 className="text-3xl font-bold mb-1">Productos</h1>
-                <p className="text-gray-400 text-sm">{products.length} producto{products.length !== 1 ? 's' : ''} disponible{products.length !== 1 ? 's' : ''}</p>
+                <p className="text-gray-400 text-sm">
+                    {products.length} producto{products.length !== 1 ? 's' : ''} disponible{products.length !== 1 ? 's' : ''}
+                </p>
             </div>
 
             {products.length === 0 ? (

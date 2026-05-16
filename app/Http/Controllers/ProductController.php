@@ -12,19 +12,36 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    public function shop(): View
+    public function shop()
     {
         $products = Product::query()
             ->with('primaryImage')
             ->latest()
-            ->paginate(12);
+            ->get()
+            ->map(fn ($product) => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'price' => (string) $product->price,
+                'stock' => $product->stock,
+                'primary_image' => $product->primaryImage
+                    ? [
+                        'url' => Storage::disk($product->primaryImage->disk)
+                            ->url($product->primaryImage->path),
+                    ]
+                    : null,
+            ])
+            ->values()
+            ->toArray();
 
-        return View('shop', ['products' => $products]);
+        return Inertia::render('Shop', [
+            'products' => $products,
+        ]);
     }
 
     /**
@@ -151,8 +168,8 @@ class ProductController extends Controller
             $existingImage->delete();
         }
 
-        $filename = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
-        $path = 'products/' . $filename;
+        $filename = Str::uuid().'.'.$image->getClientOriginalExtension();
+        $path = 'products/'.$filename;
 
         Storage::disk('public')->put($path, file_get_contents($image->getRealPath()));
 

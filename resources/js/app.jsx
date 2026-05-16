@@ -81,6 +81,7 @@ drawStars();
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import { Toaster } from 'react-hot-toast'
 
 createInertiaApp({
     resolve: name => resolvePageComponent(
@@ -88,6 +89,23 @@ createInertiaApp({
         import.meta.glob('./Pages/**/*.jsx')
     ),
     setup({ el, App, props }) {
-        createRoot(el).render(<App {...props} />)
+        createRoot(el).render(
+            <>
+                <Toaster
+                    position="top-right"
+                    reverseOrder={false}
+                    toastOptions={{
+                        duration: 4000,
+                        style: {
+                            background: '#1f2937',
+                            color: '#fff',
+                            border: '1px solid #374151',
+                            borderRadius: '0.5rem',
+                        },
+                    }}
+                />
+                <App {...props} />
+            </>
+        )
     },
 })

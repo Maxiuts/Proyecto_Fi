@@ -2,34 +2,102 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Cart;
-use App\Models\CartIem;
+use App\Models\CartItem;
 use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
-    public function index(): View
+    /**
+     * Mostrar el carrito del usuario autenticado.
+     */
+    public function index()
     {
         $cart = auth()->user()->cart;
 
-        $items = $cart ? $cart->items()->with('product.primaryImage')->get() : collect(); // regresa el carro con los items que tenga imagen donde los imprime
+        $items = $cart
+            ? $cart->items()
+                ->with('product.primaryImage')
+                ->get()
+                ->map(fn ($item) => [
+                    'id' => $item->id,
+                    'quantity' => $item->quantity,
+                    'product' => [
+                        'id' => $item->product->id,
+                        'name' => $item->product->name,
+                        'price' => $item->product->price,
+                        'primary_image' => $item->product->primaryImage
+                            ? [
+                                'url' => Storage::disk($item->product->primaryImage->disk)
+                                    ->url($item->product->primaryImage->path),
+                            ]
+                            : null,
+                    ],
+                ])
+            : collect();
 
-        $total = $items->sum(fn($item) => $item->product->price * $item->quantity);//recorre cada item con su precio y lo multiplica por el precio de dicho item
+        $total = $items->sum(fn ($item) => $item['product']['price'] * $item['quantity']);
 
-        return view('cart', compact('items', 'total'));// manda articulos a cart.blade.php
+        return Inertia::render('Cart', [
+            'items' => $items,
+            'total' => (float) $total,
+        ]);
     }
 
-    public function store(Request $request) : RedirectResponese
+    /**
+     * Agregar o actualizar un producto en el carrito.
+     */
+    public function store(Request $request): RedirectResponse
     {
-        $product = Product :: findOrFail($request->product_id);// busca el producto o manda error
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'sometimes|integer|min:1',
+        ]);
 
-        $cart = auth()->user()->cart()->findOrCreate(['user_id', => auth()->id()]);// Busca el carro del usuario si no lo crea.
-    
-        $item = $cart->items()->where('product_id', $product->id)->first();// Busca el producto en el carrito, si esque existe.
+        $product = Product::findOrFail($validated['product_id']);
 
+        // Obtener o crear el carrito del usuario
+        $cart = auth()->user()->cart()->firstOrCreate(['user_id' => auth()->id()]);
+
+        // Buscar si el producto ya existe en el carrito
+        $existingItem = $cart->items()->where('product_id', $product->id)->first();
+
+        if ($existingItem) {
+            $existingItem->increment('quantity', $validated['quantity'] ?? 1);
+        } else {
+            $cart->items()->create([
+                'product_id' => $product->id,
+                'quantity' => $validated['quantity'] ?? 1,
+            ]);
+        }
+
+        return redirect()->route('cart.index');
+    }
+
+    /**
+     * Actualizar la cantidad de un artículo en el carrito.
+     */
+    public function update(Request $request, CartItem $item): RedirectResponse
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $item->update(['quantity' => $validated['quantity']]);
+
+        return redirect()->route('cart.index');
+    }
+
+    /**
+     * Eliminar un artículo del carrito.
+     */
+    public function destroy(CartItem $item): RedirectResponse
+    {
+        $item->delete();
+
+        return redirect()->route('cart.index');
     }
 }

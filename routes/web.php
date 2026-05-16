@@ -1,17 +1,23 @@
 <?php
 
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CartController;
 
-Route::middleware(['auth', 'verified'])->group(function () {//ruta para el carro
+Route::middleware(['auth', 'verified'])->group(function () {// ruta para el carro
     Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
-    Route::get('/cart',[CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart',[CartController::class, 'store'])->name('cart.store');
-    Route::patch('/cart/{item}',[CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{item}',[CartController::class, 'destroy'])->name('cart.destroy');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::patch('/cart/{item}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{item}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+    // Rutas de checkout
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
 // Rutas para autenticación social con Google y GitHub
@@ -30,7 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
 });
 
-Route::middleware(['auth', 'verified', \App\Http\Middleware\EnsureAdmin::class])->group(function () {
+Route::middleware(['auth', 'verified', EnsureAdmin::class])->group(function () {
     Route::get('/dashboard', [ProductController::class, 'index'])->name('dashboard');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
