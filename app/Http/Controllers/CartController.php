@@ -14,11 +14,11 @@ class CartController extends Controller
 {
     public function index(): View
     {
-        $cart->auth()->user()->cart;
+        $cart = auth()->user()->cart;
 
         $items = $cart ? $cart->items()->with('product.primaryImage')->get() : collect(); // regresa el carro con los items que tenga imagen donde los imprime
 
-        $total = $items->sum(fn($item)) => $item->product->price * $item->quantity;//recorre cada item con su precio y lo multiplica por el precio de dicho item
+        $total = $items->sum(fn($item) => $item->product->price * $item->quantity);//recorre cada item con su precio y lo multiplica por el precio de dicho item
 
         return view('cart', compact('items', 'total'));// manda articulos a cart.blade.php
     }
