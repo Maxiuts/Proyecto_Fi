@@ -21,6 +21,10 @@
                         Administrar
                     </a>
                     @endif
+                    <a href = "{{ route('cart.index') }}"
+                        class="text-sm text-gray-400 hover:text-white transition">
+                        Carrito
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button class="text-sm text-gray-400 hover:text-white transition">
