@@ -32,10 +32,6 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
-});
-
 Route::middleware(['auth', 'verified', EnsureAdmin::class])->group(function () {
     Route::get('/dashboard', [ProductController::class, 'index'])->name('dashboard');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
