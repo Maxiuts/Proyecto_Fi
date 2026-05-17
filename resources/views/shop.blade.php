@@ -97,14 +97,19 @@
                                 <span class="text-lg font-bold text-indigo-400">
                                     ${{ number_format($product->price, 2) }}
                                 </span>
-                                <button
-                                    @if ($product->stock === 0) disabled @endif
-                                    class="text-xs px-3 py-1.5 rounded-lg font-medium transition
-                                           {{ $product->stock > 0
-                                               ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                                               : 'bg-white/5 text-gray-500 cursor-not-allowed' }}">
-                                    Agregar
-                                </button>
+                                <form method="POST" action="{{ route('cart.store') }}">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button
+                                        @if ($product->stock === 0) disabled @endif
+                                        class="text-xs px-3 py-1.5 rounded-lg font-medium transition
+                                            {{ $product->stock > 0
+                                                ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                                                : 'bg-white/5 text-gray-500 cursor-not-allowed' }}">
+                                        Agregar
+                                    </button>
+                                </form>
                             </div>
                         </div>
 
